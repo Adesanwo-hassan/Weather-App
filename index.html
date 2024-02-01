@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>WEATHER APP</title>
+    <style media="all">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            align-content: center;
+            grid-gap:10px;
+            height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(weather-bg.jpg);
+            background-size: 100% 100vh;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .container{
+            display:grid;
+            grid-gap:18px;
+        }
+        .search{
+            justify-self: center;
+        }
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            background-color: transparent;
+            border: 1px solid white;
+            border-radius: 18px;
+            padding: 10px;
+            background-image: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7))
+        }
+        *{
+            color:white;
+        }
+        .status{
+            font-size:2.4em;
+            font-weight:500;
+        }
+        .temp {
+            font-size: 2.7em;
+            font-weight: 500;
+        }
+         button[type="button"],input{
+            color:white;
+            font-size:1.3em;
+            background-color:black;
+            border-radius:16px;
+            border:thin solid white;
+            outline:none;
+            padding:5px;
+            margin:0 5px 0 5px;
+        }
+         @media only screen and (max-width:400px){
+             h1{
+                 font-size:1.3em;
+             }
+             #currentdate{
+                 font-size:1.2em;
+             }
+            .status {
+                font-size: 2.2em;
+            }
+
+            .temp {
+                font-size: 2.3em;
+               
+            }
+
+            button[type="button"], input {
+                font-size: 0.8em;
+            }
+         }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="search"><input type="text" id="inp" placeholder="Location....." required /><button type="button" onclick="exec()">Search</button></div>
+    <div class="main-content">
+        <h1><small id="state">Oyo State</small>,<span id="country">Nigeria</span></h1>
+        <h2 id="currentdate"></h2>
+        <p ><span ><img src="weather" alt="weather logo" id="icon" /></span><span class="temp"><b id="temperature">30</b>&ordm;<sup>C</sup></span></p>
+        <p class="status" id="desc">Rainy</p>
+    </div>
+  </div>
+    <script>
+        var date = new Date().toDateString();
+        document.getElementById("currentdate").innerHTML = date;
+         
+        var state=document.getElementById("state");
+        var thecountry=document.getElementById("country");
+        var temperature=document.getElementById("temperature");
+        var desc=document.getElementById("desc");
+        var theIcon=document.getElementById("icon");
+
+          
+          let weather = {
+            apiKey: "a43fdd1bf0d64e77a4d04026230701",
+            fetchWeather: function () {
+                var country = document.getElementById("inp").value;
+                var request = new XMLHttpRequest();
+                request.open("GET","https://api.weatherapi.com/v1/current.json?key=a43fdd1bf0d64e77a4d04026230701&q=" + country + "&aqi=yes", true)
+                request.onload = function () {
+                    var res = JSON.parse(request.responseText);
+                    console.log(res);
+                    thecountry.innerHTML= res.location.country; 
+                    state.innerHTML=res.location.name;
+                    desc.innerHTML=res.current.condition.text;
+                    temperature.innerHTML=res.current.temp_c;
+                    theIcon.src=res.current.condition.icon;      
+                }
+                request.send();
+            }
+        }
+        
+        function exec(){
+          weather.fetchWeather()
+        }
+       </script>
+</body>
+</html>
